@@ -12,7 +12,7 @@ bodyB = {
     xy: [300,120],
     v: 2,
     r: 0,
-    theta: 2/3 * Math.PI
+    theta: 2/5 * Math.PI
 }
 bodyA.r = 10*Math.sqrt(bodyA.m/(2*Math.PI))
 bodyB.r = 10*Math.sqrt(bodyB.m/(2*Math.PI))
@@ -31,7 +31,7 @@ function updatePos(body){
     body.xy[0] += body.v * ( Math.cos ( body.theta ) )
     body.xy[1] -= body.v * ( Math.sin ( body.theta ) )
 }
-//add code later to check if in the next move it will be out of the canvas, not just if it is now
+//add code later to check if in the next move a body will be out of the canvas, not just if it is currently
 //use this to make better bounce detection and make it harder for body to permenatly exit the canvas
 function boundaries(body){
     if( body.xy[0] + body.r > canvas.width || body.xy[0] < body.r){
@@ -39,6 +39,15 @@ function boundaries(body){
     }
     else if(body.xy[1] + body.r > canvas.height || body.xy[1] < body.r){
         body.theta = 2*Math.PI - body.theta
+    }
+}
+function collision(a,b){
+    var radius = a.r + b.r;
+    var xCor = a.xy[0] - b.xy[0];
+    var yCor = a.xy[1] - b.xy[1];
+    if(radius > Math.sqrt( ( xCor*xCor ) + (yCor*yCor) )){
+        var KE = ( 1/2 * a.m * a.v * a.v ) + ( 1 / 2 * b.m * b.v * b.v )
+        console.log(KE)
     }
 }
 function placeInCanvas(body){
@@ -65,6 +74,7 @@ function update(body){
     updatePos(body)
     boundaries(body)
     placeInCanvas(body)
+    collision(bodyA,bodyB)
 }
 function system(){
     render();
